@@ -15,6 +15,10 @@ import org.springframework.web.bind.annotation.ResponseBody
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.client.RestClientException
 
+/**
+ * ControllerAdvice for handling exceptions across the application
+ */
+
 @CompileStatic
 @ControllerAdvice
 @Slf4j
