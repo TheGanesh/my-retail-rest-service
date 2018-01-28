@@ -11,6 +11,9 @@ import org.springframework.web.client.RestTemplate
 
 import javax.annotation.PostConstruct
 
+/**
+ * This service fetches product information by id from RedSky REST API.
+ */
 @Service
 @Slf4j
 class ProductCatalogService {

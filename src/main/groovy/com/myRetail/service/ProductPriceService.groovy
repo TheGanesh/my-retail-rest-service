@@ -5,16 +5,17 @@ import com.myRetail.contract.ProductDetails
 import com.myRetail.exception.ResourceNotFoundException
 import com.myRetail.repository.ProductPrice
 import com.myRetail.repository.ProductPriceRepository
-import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
 import java.time.LocalDateTime
 
+/**
+ * This service reads/writes price related information to Cassandra Data store
+ */
 @Service
 @Slf4j
-@CompileStatic
 class ProductPriceService {
 
     @Autowired

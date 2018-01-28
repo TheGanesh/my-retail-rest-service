@@ -1,7 +1,9 @@
 package com.myRetail.config
 
+import groovy.transform.CompileStatic
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.context.annotation.Profile
 import org.springframework.web.bind.annotation.RequestMethod
 import springfox.documentation.builders.ParameterBuilder
 import springfox.documentation.builders.PathSelectors
@@ -18,6 +20,8 @@ import static com.google.common.collect.Lists.newArrayList
 
 @Configuration
 @EnableSwagger2
+@Profile("swagger")
+@CompileStatic
 class SwaggerConfig {
 
     @Bean

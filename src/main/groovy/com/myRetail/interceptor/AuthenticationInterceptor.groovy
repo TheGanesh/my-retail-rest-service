@@ -13,6 +13,9 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
+/**
+ * This interceptor validates client provided id & secret against the server for authentication, also logs profiling stats for monitoring.
+ */
 @Slf4j
 @Component
 @CompileStatic
