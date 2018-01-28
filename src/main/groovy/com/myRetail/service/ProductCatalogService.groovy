@@ -19,7 +19,7 @@ import javax.annotation.PostConstruct
 class ProductCatalogService {
 
     @Value('${redSky.base.url}')
-    private String redSkyBaseUrl
+    String redSkyBaseUrl
 
     @Value('${redSky.product.path}')
     private String redSkyProductPath

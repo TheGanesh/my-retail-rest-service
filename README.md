@@ -65,7 +65,7 @@ cqlsh> SOURCE '/{myretail-rest-service_code_directory}/setup.cql'
 
 * [Groovy](http://groovy-lang.org/) - Programming Language
 * [SpringBoot](https://projects.spring.io/spring-boot/) - The web framework
-* [Spock](http://spockframework.org/) - Unit/Integration testing framework
+* [Spock,WireMock](http://spockframework.org/) - Unit/Integration testing framework
 * [Maven](https://maven.apache.org/) - Dependency Management
 * [Cassandra](http://cassandra.apache.org/) - Used for data storage
 * [Ehcache](http://www.ehcache.org/) - Level 1 Caching layer

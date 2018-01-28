@@ -8,4 +8,4 @@ CREATE TABLE my_retail.product_price (
    PRIMARY KEY ((product_id,currency_code))
 );
 
-INSERT INTO my_retail.product_price(product_id, product_name,current_price,currency_code,updated_time) VALUES(13860428, 'The Big Lebowski (Blu-ray) (Widescreen)',10.0,'USD',dateof(now()));
+INSERT INTO my_retail.product_price(product_id, product_name,current_price,currency_code,updated_time) VALUES(13860428, 'The Big Lebowski (Blu-ray) (Widescreen)',10.11,'USD',dateof(now()));
