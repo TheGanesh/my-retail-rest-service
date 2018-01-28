@@ -32,7 +32,7 @@ class RootConfig extends WebMvcConfigurerAdapter {
     void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(authenticationInterceptor)
                 .addPathPatterns('/**')
-                .excludePathPatterns('/health','/error','/swagger-resources/**','/v2/api-docs/**')
+                .excludePathPatterns('/info/**','/error','/swagger-resources/**','/v2/api-docs/**')
     }
 
     @Bean
@@ -43,15 +43,4 @@ class RootConfig extends WebMvcConfigurerAdapter {
                 'com.bestbuy.commerce.checkout.validator.UserMessages')
         return source
     }
-    @Bean
-    EndpointHandlerMappingCustomizer mappingCustomizer() {
-        return new EndpointHandlerMappingCustomizer() {
-            @Override
-            void customize(EndpointHandlerMapping mapping) {
-                mapping.setInterceptors(authenticationInterceptor)
-            }
-        }
-    }
-
-
 }
