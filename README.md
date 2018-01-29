@@ -7,7 +7,7 @@ This Project contains set of APIs to read/update Product information.
 
   Once application is up & running (refer. below steps of Installation/Build & Running), API can be validated either with Swagger or using curl commnds.
   
-  Swagger :
+  Swagger : Collapse 'Get Product Information' & 'Update Product Current Price' drop downs to try it out.
    
    ```
       http://localhost:8080/swagger-ui.html
@@ -33,7 +33,9 @@ Cassandra
 ```
 ### Installation
 
-Once Java,Cassandra are downloaded & installed, follow below commands to create keyspace/table in Cassandra
+Once Java,Maven is installed, follow below steps to install Cassandra & create keyspace/table.
+
+If Cassandra is not installed download .tar file from [Cassandra Download](http://apache.claz.org/cassandra/3.11.1/apache-cassandra-3.11.1-bin.tar.gz) & extract into a folder(cassandra_home)
 
 Running Cassandra:
 ```
@@ -49,18 +51,23 @@ cqlsh> SOURCE '/{myretail-rest-service_code_directory}/setup.cql'
 ## Build & Running
 
    Once in project directory ```mvn clean install spring-boot:run``` will bring application up & running. But for a more traditional way below 2 steps need to be followed
-         
-
-  1. Building artifact :
+   
+  1. Running Tests:
+       ```
+       mvn clean test
+  
+  2. Building artifact :
      ```
       mvn clean install
      ```
-  2. Running :
+  3. Running Application:
       ```
        java -jar  target/myretail-rest-service-1.0-SNAPSHOT.jar
       ```
   
- 
+        For confirmation check health url    ``` http://localhost:8080/info/health```
+
+
 ## Technology stack
 
 * [Groovy](http://groovy-lang.org/) - Programming Language

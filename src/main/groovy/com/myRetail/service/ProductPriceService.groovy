@@ -35,20 +35,28 @@ class ProductPriceService {
         )
     }
 
-    void updateProductPriceDetails(ProductDetails priceUpdateRequest) {
+    ProductDetails updateProductPriceDetails(ProductDetails priceUpdateRequest) {
 
-        productPriceRepository.save(
-                priceUpdateRequest.with {
-                    new ProductPrice(
-                            productId: id,
-                            productName: name,
-                            currentPrice: current_price.value,
-                            currencyCode: current_price.currency_code,
-                            updatedTime: LocalDateTime.now()
-                    )
-                }
+        ProductPrice productPrice = productPriceRepository.save(
+                new ProductPrice(
+                        productId: priceUpdateRequest.id,
+                        productName: priceUpdateRequest.name,
+                        currentPrice: priceUpdateRequest.current_price.value,
+                        currencyCode: priceUpdateRequest.current_price.currency_code,
+                        updatedTime: LocalDateTime.now()
+                )
         )
 
-        log.info("action=updateProductPriceDetails,productId=${priceUpdateRequest?.id},currentPrice=${priceUpdateRequest?.current_price?.value}")
+        ProductDetails updatedProductDetails = new ProductDetails(
+                id: productPrice.productId,
+                name: productPrice.productName,
+                current_price: new CurrentPrice(
+                        value: productPrice.currentPrice,
+                        currency_code: productPrice.currencyCode
+                )
+        )
+
+        log.info("action=updateProductPriceDetails,productId=${updatedProductDetails?.id},currentPrice=${updatedProductDetails?.current_price?.value}")
+        return updatedProductDetails
     }
 }

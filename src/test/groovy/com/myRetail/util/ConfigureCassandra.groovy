@@ -1,4 +1,4 @@
-package util
+package com.myRetail.util
 
 import com.datastax.driver.core.Cluster
 import com.datastax.driver.core.Session

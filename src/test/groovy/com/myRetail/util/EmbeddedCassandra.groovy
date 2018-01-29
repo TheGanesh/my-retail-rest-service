@@ -1,4 +1,4 @@
-package util
+package com.myRetail.util
 
 import groovy.transform.CompileStatic
 import org.apache.cassandra.config.DatabaseDescriptor

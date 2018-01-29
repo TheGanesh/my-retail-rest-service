@@ -1,14 +1,14 @@
-package com.ganesh.controller
+package com.myRetail
 
 import com.github.tomakehurst.wiremock.http.Request
 import com.github.tomakehurst.wiremock.http.RequestMethod
 import com.github.tomakehurst.wiremock.junit.WireMockRule
 import com.github.tomakehurst.wiremock.matching.MatchResult
-import com.myRetail.MyRetailApplication
 import com.myRetail.contract.CurrentPrice
 import com.myRetail.contract.ProductDetails
 import com.myRetail.exception.ErrorResponse
 import com.myRetail.service.ProductCatalogService
+import com.myRetail.util.EmbeddedCassandra
 import groovy.util.logging.Slf4j
 import org.junit.Rule
 import org.springframework.beans.factory.annotation.Autowired
@@ -18,9 +18,9 @@ import org.springframework.boot.test.web.client.TestRestTemplate
 import org.springframework.http.*
 import org.springframework.test.context.ContextConfiguration
 import spock.lang.Specification
-import util.EmbeddedCassandra
 
 import javax.annotation.PostConstruct
+import javax.annotation.PreDestroy
 
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse
 import static com.github.tomakehurst.wiremock.client.WireMock.requestMatching
@@ -39,7 +39,7 @@ class ProductsInfoIntegrationSpec extends Specification {
     public WireMockRule wireMockRule = new WireMockRule(wireMockConfig().dynamicPort().dynamicHttpsPort())
 
     @Autowired
-    protected TestRestTemplate testRestTemplate
+    TestRestTemplate testRestTemplate
 
     @Autowired
     protected ProductCatalogService productCatalogService
@@ -63,7 +63,7 @@ class ProductsInfoIntegrationSpec extends Specification {
         String sampleRedSkyResponse = getClass().getResource('/redSkyResponse.json').text
 
         wireMockRule.stubFor(requestMatching { Request request ->
-            MatchResult.of(request.absoluteUrl.contains("13860428") && request.method == RequestMethod.GET)
+            MatchResult.of(request.absoluteUrl.contains("1") && request.method == RequestMethod.GET)
         }.willReturn(aResponse()
                 .withBody(sampleRedSkyResponse)
                 .withHeader("Content-Type", "application/json")
@@ -72,11 +72,11 @@ class ProductsInfoIntegrationSpec extends Specification {
 
         when:
 
-        ProductDetails productDetails = testRestTemplate.exchange("/products/13860428", HttpMethod.GET, new HttpEntity(null, headers()), ProductDetails).body
+        ProductDetails productDetails = testRestTemplate.exchange("/products/1", HttpMethod.GET, new HttpEntity(null, headers()), ProductDetails).body
 
         then:
 
-        productDetails.id == 13860428L
+        productDetails.id == 1L
         productDetails.name == "The Big Lebowski (Blu-ray)"
         productDetails.current_price.value == 10.11
         productDetails.current_price.currency_code == "USD"
@@ -84,7 +84,7 @@ class ProductsInfoIntegrationSpec extends Specification {
     }
 
 
-    def 'Product GET API failure scenario'() {
+    def 'Product GET API exception scenario'() {
 
         setup:
 
@@ -92,7 +92,7 @@ class ProductsInfoIntegrationSpec extends Specification {
         productCatalogService.redSkyBaseUrl = "http://localhost:${wireMockRule.port()}"
 
         wireMockRule.stubFor(requestMatching { Request request ->
-            MatchResult.of(request.absoluteUrl.contains("11111") && request.method == RequestMethod.GET)
+            MatchResult.of(request.absoluteUrl.contains("22") && request.method == RequestMethod.GET)
         }.willReturn(aResponse()
                 .withBody("""{"IN_VALID":"XX"}""")
                 .withHeader("Content-Type", "application/json")
@@ -101,7 +101,7 @@ class ProductsInfoIntegrationSpec extends Specification {
 
         when:
 
-        ResponseEntity<ErrorResponse> responseEntity = testRestTemplate.exchange("/products/11111", HttpMethod.GET, new HttpEntity(null, headers()), ErrorResponse)
+        ResponseEntity<ErrorResponse> responseEntity = testRestTemplate.exchange("/products/22", HttpMethod.GET, new HttpEntity(null, headers()), ErrorResponse)
 
         then:
         responseEntity.statusCode == HttpStatus.NOT_FOUND
@@ -115,8 +115,8 @@ class ProductsInfoIntegrationSpec extends Specification {
         setup:
 
         ProductDetails productDetails = new ProductDetails(
-                id: 13860429L,
-                name: "The Big Lebowski (Blu-ray)",
+                id: 1L,
+                name: "The Small Lebowski (Blu-ray)",
                 current_price: new CurrentPrice(
                         value: 100.11,
                         currency_code: "USD"
@@ -126,18 +126,30 @@ class ProductsInfoIntegrationSpec extends Specification {
         HttpEntity<ProductDetails> requestEntity = new HttpEntity<>(productDetails, headers())
         when:
 
-        ProductDetails response = testRestTemplate.exchange("/products/13860429", HttpMethod.PUT, requestEntity, ProductDetails).body
+        ProductDetails response = testRestTemplate.exchange("/products/1", HttpMethod.PUT, requestEntity, ProductDetails).body
 
         then:
 
-        response.id == 13860429L
-        response.name == "The Big Lebowski (Blu-ray)"
+        response.id == 1L
+        response.name == "The Small Lebowski (Blu-ray)"
         response.current_price.value == 100.11
         response.current_price.currency_code == "USD"
 
+
+        cleanup:
+        testRestTemplate.exchange("/products/1", HttpMethod.PUT, new HttpEntity<>(new ProductDetails(
+                id: 1L,
+                name: "The Small Lebowski (Blu-ray)",
+                current_price: new CurrentPrice(
+                        value: 10.11,
+                        currency_code: "USD"
+                )
+
+        ), headers()), ProductDetails)
+
     }
 
-    def 'Product PUT API failure scenario'() {
+    def 'Product PUT API exception scenario'() {
 
         setup:
 
@@ -161,7 +173,6 @@ class ProductsInfoIntegrationSpec extends Specification {
         responseEntity.body.errorCode == "PRODUCT_ID_MISMATCH"
     }
 
-
     @TestConfiguration
     static class TestConfig {
 
@@ -169,9 +180,16 @@ class ProductsInfoIntegrationSpec extends Specification {
 
         @PostConstruct
         void postConstruct() {
-            log.info('\n\n\tstarting cassandra for unit tests.\n')
+            log.info('\n\n\tstarting cassandra for integration tests.\n')
             embeddedCassandra = new EmbeddedCassandra()
             embeddedCassandra.start()
+
+        }
+
+        @PreDestroy
+        void preDestroy() {
+            log.info('\n\n\tshutting down cassandra after integration tests.\n')
+            embeddedCassandra.stop()
 
         }
     }
