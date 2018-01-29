@@ -63,6 +63,8 @@ cqlsh> SOURCE '/{myretail-rest-service_code_directory}/setup.cql'
   3. Running Application:
       ```
        java -jar  target/myretail-rest-service-1.0-SNAPSHOT.jar
+       
+       java -jar -Dspring.profiles.active=aws target/myretail-rest-service-1.0-SNAPSHOT.jar
       ```
   
         For confirmation check health url    ``` http://localhost:8080/info/health```
