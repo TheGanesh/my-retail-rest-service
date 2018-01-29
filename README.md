@@ -11,7 +11,7 @@ This Project contains set of APIs to read/update Product information.
    
    ```
       http://localhost:8080/swagger-ui.html
-      http://192.168.1.103:8080/swagger-ui.html
+      http://192.168.1.149:8080/swagger-ui.html
    ```
 
   CURL GET API:     
